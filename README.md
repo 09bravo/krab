@@ -1,6 +1,6 @@
-# THE SHELL CURRENTLY HAS NEITHER SYNTAX HIGHLIGHTING NOR (SMART)AUTOCOMPLETE, PLEASE WAIT UNTIL THE 1.0 RELEASE
 # dish
-
+The Greatest shell that every was or ever will be,
+The most lightwight, Easy to easy, posix comptable shell to every was and every will.
 # Installation
 ```
 make
