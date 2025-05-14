@@ -14,4 +14,9 @@ int cd(char* path) {
 	}
 	return 0;
 }
+int help() {
+	puts("olight0's dish, by the community for community.");
+	puts("the help command is currently still on the work.");
+	return 1;
+}
 #endif
