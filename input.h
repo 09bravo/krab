@@ -16,14 +16,15 @@ int input() {
       continue;
     if (c == '\n' || c == '\r') {
       buffer[len] = '\0';
-      printf("\n");
+      printf("\r\n");
       if (len == 0) {
         prompt();
         fflush(stdout);
         continue;
       }
       if (strcmp(buffer, "exit") == 0) {
-        break;
+        disableRawMode();
+	break;
       }
       buffer[strcspn(buffer, "\n")] = 0;
       char *args[100];
@@ -39,17 +40,29 @@ int input() {
       }
       if (strcmp(args[0], "cd") == 0) {
         cd(args[1]);
+	prompt();
+	len = 0;
+	fflush(stdout);
+        continue;
+      }
+   if (strcmp(args[0], "help") == 0) {
+        help();
+	prompt();
+	len = 0;
+	fflush(stdout);
         continue;
       }
       pid_t pid = fork();
       if (pid == 0) {
-        signal(SIGINT, SIG_DFL);
+        disableRawMode();
+	signal(SIGINT, SIG_DFL);
         execvp(args[0], args);
         printf("dish: Unrecognized command: %s\n", buffer);
         return 1;
       } else if (pid > 0) {
         int status;
         waitpid(pid, &status, 0);
+	enableRawMode();
       } else {
         perror("fork");
       }
