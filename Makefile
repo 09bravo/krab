@@ -1,7 +1,7 @@
 gcc:
-	gcc main.c -o dish -Wall -Wextra -pedantic
+	gcc main.c -o eonsh -Wall -Wextra -pedantic
 
 install: 
-	su -c 'mv dish /bin/dish'
+	su -c 'mv eonsh /bin/eonsh'
 uninstall:
-	su -c 'rm -Rf /bin/dish'
+	su -c 'rm -Rf /bin/eonsh'

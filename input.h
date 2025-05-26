@@ -57,7 +57,7 @@ int input() {
         disableRawMode();
 	signal(SIGINT, SIG_DFL);
         execvp(args[0], args);
-        printf("dish: Unrecognized command: %s\n", buffer);
+        printf("eonsh: Unrecognized command: %s\n", buffer);
         return 1;
       } else if (pid > 0) {
         int status;
