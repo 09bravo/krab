@@ -3,6 +3,7 @@
 #include "raw_mode.h"
 #include <stdio.h>
 #include <unistd.h>
+#include "history.h"
 int input() {
   enableRawMode();
   prompt();
@@ -26,6 +27,12 @@ int input() {
         disableRawMode();
 	break;
       }
+      history(buffer);
+      if(c == '\x1b') {
+	char seq[2];
+	if(read(STDIN_FILENO, &seq[0], 1) == 0) continue;
+        if(read(STDIN_FILENO, &seq[1], 1) == 0) continue;
+	}
       buffer[strcspn(buffer, "\n")] = 0;
       char *args[100];
       int i = 0;
@@ -57,7 +64,7 @@ int input() {
         disableRawMode();
 	signal(SIGINT, SIG_DFL);
         execvp(args[0], args);
-        printf("eonsh: Unrecognized command: %s\n", buffer);
+        printf("krab: Unrecognized command: %s\n", buffer);
         return 1;
       } else if (pid > 0) {
         int status;

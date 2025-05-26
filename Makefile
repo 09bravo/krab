@@ -1,7 +1,7 @@
 gcc:
-	gcc main.c -o eonsh -Wall -Wextra -pedantic
+	gcc main.c -o krab -Wall -Wextra -pedantic
 
 install: 
-	su -c 'mv eonsh /bin/eonsh'
+	su -c 'mv krab /bin/krab'
 uninstall:
-	su -c 'rm -Rf /bin/eonsh'
+	su -c 'rm -Rf /bin/krab'

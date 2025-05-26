@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-int history() {
+void history(const char *buffer) {
 	FILE *file;
 	char path[PATH_MAX];
-	snprintf(path, sizeof(path), "%s/.eonsh_history", getenv("HOME"));
+	snprintf(path, sizeof(path), "%s/.krab_history", getenv("HOME"));
 	file = fopen(path, "a");
 	fputs(buffer, file);
 	fputc('\n', file);
