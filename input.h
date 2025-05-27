@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "history.h"
+#include "wordexp.h"
 int input() {
   enableRawMode();
   prompt();
@@ -28,25 +29,28 @@ int input() {
 	break;
       }
       history(buffer);
-      if(c == '\x1b') {
-	char seq[2];
-	if(read(STDIN_FILENO, &seq[0], 1) == 0) continue;
-        if(read(STDIN_FILENO, &seq[1], 1) == 0) continue;
-	}
+      wordexp_t p;
+      char **args = NULL;
       buffer[strcspn(buffer, "\n")] = 0;
-      char *args[100];
-      int i = 0;
-      char *token = strtok(buffer, " ");
-      while (token != NULL && i < 99) {
-        args[i++] = token;
-        token = strtok(NULL, " ");
+      if(wordexp(buffer, &p, 0) != 0) {
+	fprintf(stderr, "krab: Illegal command \"%s\"\r\n", buffer);
+	prompt();
+	len = 0;
+	fflush(stdout);
+	continue;
       }
-      args[i] = NULL;
-      if (args[0] == NULL) {
-        continue;
-      }
+      args = p.we_wordv;
+      if(wordexp(buffer, &p, 0) == 0) {
+	args = p.we_wordv;
+	if(args[0] == NULL) {
+	wordfree(&p);
+	continue;
+	}
+      } 
+      buffer[strcspn(buffer, "\n")] = 0;
       if (strcmp(args[0], "cd") == 0) {
         cd(args[1]);
+	wordfree(&p);
 	prompt();
 	len = 0;
 	fflush(stdout);
@@ -54,6 +58,7 @@ int input() {
       }
    if (strcmp(args[0], "help") == 0) {
         help();
+	wordfree(&p);
 	prompt();
 	len = 0;
 	fflush(stdout);
