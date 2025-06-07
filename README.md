@@ -1,2 +1,2 @@
 ![Logo](./krab.svg)
-# README IS STILL IN THE WORKS.
+# Krab is currently being rewritten in rust
