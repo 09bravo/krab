@@ -1,2 +1,2 @@
 ![Logo](./krab.svg)
-# Krab is currently being rewritten,
+# Krab is currently being rewritten.
