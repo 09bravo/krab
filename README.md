@@ -1,15 +1,15 @@
 ![Logo](./krab.svg)
 # Overview
 krab is a shell designed to be lightweight and minimal while not relying on any external libraries (like GNU Readline or Libedit).
-#Installition
+# Installition
 you can simply install it with ```make```
 ```
 make install
 ```
-#Uninstallition
+# Uninstallition
 "why?" why not make life a little easier?
 ```
 make uninstall
 ```
-#Dependencies
+# Dependencies
 There is none.
