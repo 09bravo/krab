@@ -1,5 +1,6 @@
 #include "syntx.h"
 #include "colors.h"
+#include <asm-generic/ioctls.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

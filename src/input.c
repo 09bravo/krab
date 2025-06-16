@@ -4,7 +4,8 @@
 #include "prompt.h"
 #include "raw_mode.h"
 #include "syntx.h"
-#include "wordexp.h"
+#include <stdlib.h>
+#include <wordexp.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/wait.h>
@@ -13,7 +14,12 @@ int input() {
   enableRawMode();
   printf("%s", prompt());
   fflush(stdout);
-  char buffer[1024];
+  size_t buffer_size = 1024;
+  char *buffer = malloc(buffer_size);
+  if(!buffer) {
+    perror("malloc");
+    return 1;
+  }
   int len = 0;
   int cursor = 0;
   while (1) {
@@ -48,6 +54,8 @@ int input() {
       buffer[len] = '\0';
       printf("\r\n");
       if (len == 0) {
+        len = 0;
+        cursor = 0;
         printf("%s", prompt());
         fflush(stdout);
         continue;
@@ -102,6 +110,8 @@ int input() {
         signal(SIGINT, SIG_DFL);
         execvp(args[0], args);
         printf("krab: Unrecognized command: %s\n", buffer);
+        wordfree(&p);
+        free(buffer);
         return 1;
       } else if (pid > 0) {
         int status;
@@ -119,6 +129,7 @@ int input() {
       break;
     } else if (c == 12) {
       printf("\033[2J\033[H");
+        printf("\r\x1b[2K");
       printf("%s", prompt());
         highlight(prompt(), buffer);
         printf("\x1b[%dG", visible_length(prompt()) + cursor + 1);
@@ -129,24 +140,32 @@ int input() {
         memmove(&buffer[cursor], &buffer[cursor + 1], len - cursor);
         len--;
         buffer[len] = '\0';
-        printf("\r");
+        printf("\r\x1b[2K");
         highlight(prompt(), buffer);
         printf("\x1b[%dG", visible_length(prompt()) + cursor + 1);
         fflush(stdout);
       }
     } else {
-      if ((size_t)len < sizeof(buffer) - 1) {
+      if ((size_t)(len + 1) >= buffer_size) {
+        buffer_size *= 2;
+        char *new_buffer = realloc(buffer, buffer_size);
+        if(!new_buffer) {
+          free(buffer);
+          perror("realloc");
+          return 1;
+        }
+        buffer = new_buffer;
+        }
         memmove(&buffer[cursor + 1], &buffer[cursor], len - cursor);
         buffer[cursor] = c;
         len++;
         cursor++;
         buffer[len] = '\0';
-        printf("\r");
+        printf("\r\x1b[2K");
         highlight(prompt(), buffer);
         printf("\x1b[%dG", visible_length(prompt()) + cursor + 1);
         fflush(stdout);
       }
     }
-  }
-  return 0;
+   return 0;
 }
