@@ -14,7 +14,7 @@ int cd(char *path) {
   return 0;
 }
 int help() {
-  puts("olight0's krab, by the community for community.\r\n");
+  puts("bravo009's krab, by the community for community.\r\n");
   puts("the help command is currently still on the work.\r");
   return 0;
 }
