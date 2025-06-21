@@ -7,9 +7,9 @@
 static struct termios orig_termios;
 void disableRawMode() { tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios); }
 void enableRawMode() {
-  struct termios raw = orig_termios;
   tcgetattr(STDIN_FILENO, &orig_termios);
   atexit(disableRawMode);
+  struct termios raw = orig_termios;
   raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
   raw.c_iflag &= ~(IXON | ICRNL | BRKINT | INPCK | ISTRIP);
   raw.c_oflag &= ~(OPOST);

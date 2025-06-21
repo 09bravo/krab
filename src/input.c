@@ -130,10 +130,13 @@ int input() {
     } else if (c == 12) {
       printf("\033[2J\033[H");
         printf("\r\x1b[2K");
-      printf("%s", prompt());
+      	if(len > 0) {
         highlight(prompt(), buffer);
         printf("\x1b[%dG", visible_length(prompt()) + cursor + 1);
-      fflush(stdout);
+	} else {
+	printf("%s", prompt());
+	}
+	fflush(stdout);
     } else if (c == 127 || c == '\b') {
       if (cursor > 0 && len > 0) {
         cursor--;
